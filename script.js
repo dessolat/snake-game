@@ -22,9 +22,10 @@ const pxStep = 50,
     SNAKE_LENGTH: 1
   };
 
-let fruitCoords,
+let fruitCoords = [],
   coords = [{ x: 6, y: 2 }],
-  score = 0;
+  score = 0,
+  fruitEaten = false;
 
 const loadingImages = path => {
   return new Promise(resolve => {
@@ -57,8 +58,9 @@ Promise.all([
     let posX = coords[0].x;
     let posY = coords[0].y;
 
+    fruitEaten = false;
     ctx.clearRect(0, 0, innerWidth, innerHeight);
-    renderFruit();
+    renderFruits();
     ctx.fillText(`Current score: ${score}`, 235, 35);
 
     switch (OPTIONS.DIRECTION) {
@@ -79,22 +81,26 @@ Promise.all([
     }
 
     coords.unshift({ x: posX, y: posY });
-
-    //Fruit eating check
-    if (posX === fruitCoords[0] && posY === fruitCoords[1]) {
-      eatingFruitSound();
-      score += 1;
-      renderRandomFruit();
-      if (!(score % 5)) {
-        OPTIONS.GAME_SPEED -= 10;
-        clearInterval(gameInterval);
-        gameInterval = setInterval(() => {
-          main(gameInterval);
-        }, OPTIONS.GAME_SPEED);
+  
+    fruitCoords.forEach((fruitCoord, index) => {
+      if (posX === fruitCoord.x && posY === fruitCoord.y) {
+        eatingFruitSound();
+        score += 1;
+        fruitEaten = true;
+        fruitCoords.splice(index, 1);
+        renderRandomFruit();
+				
+        if (!(score % 5)) {
+          OPTIONS.GAME_SPEED -= 10;
+          clearInterval(gameInterval);
+          gameInterval = setInterval(() => {
+            main(gameInterval);
+          }, OPTIONS.GAME_SPEED);
+        }
       }
-    } else {
-      coords.pop();
-    }
+    });
+
+    !fruitEaten && coords.pop();
 
     //Rendering snake head and body
     for (let i = coords.length - 1; i >= 0; i--) {
@@ -163,8 +169,10 @@ Promise.all([
     }
   };
 
-  const renderFruit = () => {
-    ctx.drawImage(fruitImg, pxStep * fruitCoords[0], pxStep * fruitCoords[1]);
+  const renderFruits = () => {
+    for (fruitCoord of fruitCoords) {
+      ctx.drawImage(fruitImg, pxStep * fruitCoord.x, pxStep * fruitCoord.y);
+    }
   };
 
   const renderRandomFruit = () => {
@@ -175,9 +183,16 @@ Promise.all([
         renderRandomFruit();
         return false;
       }
-			
     }
-    fruitCoords = [fruitX, fruitY];
+
+    for (let fruitCoord of fruitCoords) {
+      if (fruitCoord.x === fruitX && fruitCoord.y === fruitY) {
+        renderRandomFruit();
+        return false;
+      }
+    }
+
+    fruitCoords.push({ x: fruitX, y: fruitY });
     ctx.drawImage(fruitImg, pxStep * fruitX, pxStep * fruitY);
   };
 
@@ -202,7 +217,7 @@ Promise.all([
 
   const eatingFruitSound = () => {
     var audio = new Audio();
-    audio.src = '/sounds/eating.mp3';
+    audio.src = './sounds/eating.mp3';
     audio.autoplay = true;
   };
 
@@ -218,6 +233,7 @@ Promise.all([
     OPTIONS.NUMBER_FRUITS = +modalFruitsInput.value;
     OPTIONS.SNAKE_LENGTH = +modalLengthInput.value;
     coords = [{ x: 6, y: 2 }];
+    fruitCoords = [];
     score = 0;
 
     ctx.drawImage(OPTIONS.HEAD_IMAGE, pxStep * coords[0].x, pxStep * coords[0].y);
