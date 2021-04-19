@@ -36,13 +36,13 @@ const loadingImages = path => {
 
 //Awaiting for loading images
 Promise.all([
-  loadingImages('/images/snake-head-down.png'),
-  loadingImages('/images/snake-head-left.png'),
-  loadingImages('/images/snake-head-up.png'),
-  loadingImages('/images/snake-head-right.png'),
-  loadingImages('/images/snake-tail.png'),
-  loadingImages('/images/apple.png'),
-  loadingImages('/images/collision.png')
+  loadingImages('./images/snake-head-down.png'),
+  loadingImages('./images/snake-head-left.png'),
+  loadingImages('./images/snake-head-up.png'),
+  loadingImages('./images/snake-head-right.png'),
+  loadingImages('./images/snake-tail.png'),
+  loadingImages('./images/apple.png'),
+  loadingImages('./images/collision.png')
 ]).then(images => {
   const snakeHeadDownImg = images[0].path[0],
     snakeHeadLeftImg = images[1].path[0],
