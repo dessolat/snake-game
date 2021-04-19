@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/png" href="./images/snake-head-down.png" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <title>Snake</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="700px" height="600px"> </canvas>
+
+    <p class="countdown-timer">3</p>
+    
+		<div class="wrapper">
+      <div class="modal">
+        <h2 class="modal__title">Игровые опции:</h2>
+        <div class="modal__content">
+          <table>
+            <tbody>
+              <tr>
+                <td>Начальная длина</td>
+                <td>
+                  <select class="modal__select modal__length-input">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Кол-во фруктов</td>
+                <td>
+                  <select class="modal__select modal__fruits-input">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Скорость игры</td>
+                <td>
+                  <select class="modal__select modal__speed-input">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal__footer">
+          <button class="modal__btn"></button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
