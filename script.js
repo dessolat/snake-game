@@ -15,6 +15,7 @@ const pxStep = 50,
   OPTIONS = {
     DIRECTION: 'down',
     HEAD_IMAGE: null,
+		BODY_IMAGE: null,
     DIRECTION_CHANGED: false,
     FRUIT_RENDERED: false,
     GAME_SPEED: null,
@@ -23,7 +24,7 @@ const pxStep = 50,
   };
 
 let fruitCoords = [],
-  coords = [{ x: 6, y: 2 }],
+  coords = [],
   score = 0,
   fruitEaten = false;
 
@@ -221,16 +222,27 @@ Promise.all([
 
     ctx.clearRect(0, 0, innerWidth, innerHeight);
 
+    //Setting initial options
     OPTIONS.HEAD_IMAGE = snakeHeadDownImg;
+		OPTIONS.BODY_IMAGE= snakeTailImg;
     OPTIONS.DIRECTION = 'down';
     OPTIONS.GAME_SPEED = 350 - +modalSpeedInput.value * 40;
     OPTIONS.NUMBER_FRUITS = +modalFruitsInput.value;
     OPTIONS.SNAKE_LENGTH = +modalLengthInput.value;
-    coords = [{ x: 6, y: 2 }];
+
+    coords = [];
     fruitCoords = [];
     score = 0;
 
-    ctx.drawImage(OPTIONS.HEAD_IMAGE, pxStep * coords[0].x, pxStep * coords[0].y);
+    for (let i = 1; i <= OPTIONS.SNAKE_LENGTH; i++) coords.push({ x: 6, y: 5 - i });
+
+    //Rendering snake
+		ctx.drawImage(OPTIONS.HEAD_IMAGE, pxStep * coords[0].x, pxStep * coords[0].y);
+
+    for (let i = 1; i < OPTIONS.SNAKE_LENGTH; i++) {
+      ctx.drawImage(OPTIONS.BODY_IMAGE, pxStep * coords[i].x, pxStep * coords[i].y);
+    }
+
     ctx.fillText(`Current score: ${score}`, 235, 35);
 
     for (let i = 0; i < OPTIONS.NUMBER_FRUITS; i++) renderRandomFruit();
@@ -242,10 +254,10 @@ Promise.all([
     //Arrow-key listener
     document.addEventListener('keydown', setDirection);
 
-		//Запуск игры
+    //Запуск игры
     main();
   };
 
-	//Первичный показ модалки
+  //Первичный показ модалки
   showModal();
 });
