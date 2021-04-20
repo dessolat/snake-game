@@ -15,7 +15,7 @@ const pxStep = 50,
   OPTIONS = {
     DIRECTION: 'down',
     HEAD_IMAGE: null,
-		BODY_IMAGE: null,
+    BODY_IMAGE: null,
     DIRECTION_CHANGED: false,
     FRUIT_RENDERED: false,
     GAME_SPEED: null,
@@ -62,7 +62,7 @@ Promise.all([
     fruitEaten = false;
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     renderFruits();
-    ctx.fillText(`Current score: ${score}`, 235, 35);
+    ctx.fillText(`Текущий счёт: ${score}`, 235, 35);
 
     switch (OPTIONS.DIRECTION) {
       case 'up':
@@ -224,7 +224,7 @@ Promise.all([
 
     //Setting initial options
     OPTIONS.HEAD_IMAGE = snakeHeadDownImg;
-		OPTIONS.BODY_IMAGE= snakeTailImg;
+    OPTIONS.BODY_IMAGE = snakeTailImg;
     OPTIONS.DIRECTION = 'down';
     OPTIONS.GAME_SPEED = 350 - +modalSpeedInput.value * 40;
     OPTIONS.NUMBER_FRUITS = +modalFruitsInput.value;
@@ -234,21 +234,28 @@ Promise.all([
     fruitCoords = [];
     score = 0;
 
-    for (let i = 1; i <= OPTIONS.SNAKE_LENGTH; i++) coords.push({ x: 6, y: 5 - i });
-
-    //Rendering snake
-		ctx.drawImage(OPTIONS.HEAD_IMAGE, pxStep * coords[0].x, pxStep * coords[0].y);
+    for (let i = 0; i < OPTIONS.SNAKE_LENGTH; i++) coords.push({ x: 6, y: 5 - i });
+    
+		//Snake rendering
+    ctx.drawImage(OPTIONS.HEAD_IMAGE, pxStep * coords[0].x, pxStep * coords[0].y);
 
     for (let i = 1; i < OPTIONS.SNAKE_LENGTH; i++) {
       ctx.drawImage(OPTIONS.BODY_IMAGE, pxStep * coords[i].x, pxStep * coords[i].y);
     }
 
-    ctx.fillText(`Current score: ${score}`, 235, 35);
-
     for (let i = 0; i < OPTIONS.NUMBER_FRUITS; i++) renderRandomFruit();
 
-    startGame();
+    countdown(3);
   };
+
+  const countdown = count =>
+    new Promise(resolve => {
+      setTimeout(() => {
+        ctx.clearRect(205, 0, 300, 50);
+				ctx.fillText(`Игра начнётся через: ${count}`, 205, 35);
+        resolve(count);
+      }, 1000);
+    }).then(count => (count > 0 ? countdown(count - 1) : startGame()));
 
   const startGame = () => {
     //Arrow-key listener
