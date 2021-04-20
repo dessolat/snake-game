@@ -235,8 +235,8 @@ Promise.all([
     score = 0;
 
     for (let i = 0; i < OPTIONS.SNAKE_LENGTH; i++) coords.push({ x: 6, y: 5 - i });
-    
-		//Snake rendering
+
+    //Snake rendering
     ctx.drawImage(OPTIONS.HEAD_IMAGE, pxStep * coords[0].x, pxStep * coords[0].y);
 
     for (let i = 1; i < OPTIONS.SNAKE_LENGTH; i++) {
@@ -245,26 +245,28 @@ Promise.all([
 
     for (let i = 0; i < OPTIONS.NUMBER_FRUITS; i++) renderRandomFruit();
 
-    countdown(3);
+    countDownTimer(3, true);
   };
 
-  const countdown = count =>
+  //Countdown timer before game starts
+  const countDownTimer = (count, firstStart) =>
     new Promise(resolve => {
-      setTimeout(() => {
-        ctx.clearRect(205, 0, 300, 50);
-				ctx.fillText(`Игра начнётся через: ${count}`, 205, 35);
-        resolve(count);
-      }, 1000);
-    }).then(count => (count > 0 ? countdown(count - 1) : startGame()));
+      setTimeout(
+        () => {
+          ctx.clearRect(205, 0, 300, 50);
+          ctx.fillText(`Игра начнётся через: ${count}`, 205, 35);
+          resolve(count);
+        },
+        firstStart ? 50 : 1000
+      );
+    }).then(count => (count > 0 ? countDownTimer(count - 1, false) : startGame()));
 
   const startGame = () => {
-    //Arrow-key listener
     document.addEventListener('keydown', setDirection);
 
-    //Запуск игры
+    //Starting main game loop
     main();
   };
 
-  //Первичный показ модалки
   showModal();
 });
