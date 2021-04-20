@@ -25,6 +25,7 @@ const pxStep = 50,
 
 let fruitCoords = [],
   coords = [],
+  highScore = 0,
   score = 0,
   fruitEaten = false;
 
@@ -62,7 +63,7 @@ Promise.all([
     fruitEaten = false;
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     renderFruits();
-    ctx.fillText(`Текущий счёт: ${score}`, 235, 35);
+    ctx.fillText(`Текущий счёт: ${score}   Рекорд: ${highScore}`, 177, 35);
 
     switch (OPTIONS.DIRECTION) {
       case 'up':
@@ -194,6 +195,7 @@ Promise.all([
 
   const endGame = () => {
     document.removeEventListener('keydown', setDirection);
+    score > highScore && (highScore = score);
     setTimeout(() => {
       showModal('Сыграем еще? 😊');
     }, 2000);
@@ -263,7 +265,7 @@ Promise.all([
 
   const startGame = () => {
     document.addEventListener('keydown', setDirection);
-
+    
     //Starting main game loop
     main();
   };
