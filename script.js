@@ -17,7 +17,7 @@ const pxStep = 50,
     HEAD_IMAGE: null,
     DIRECTION_CHANGED: false,
     FRUIT_RENDERED: false,
-    GAME_SPEED: 300,
+    GAME_SPEED: null,
     NUMBER_FRUITS: 1,
     SNAKE_LENGTH: 1
   };
@@ -54,7 +54,7 @@ Promise.all([
     collisionImg = images[6].path[0];
 
   //Main game function (loop)
-  const main = gameInterval => {
+  const main = () => {
     let posX = coords[0].x;
     let posY = coords[0].y;
 
@@ -81,7 +81,7 @@ Promise.all([
     }
 
     coords.unshift({ x: posX, y: posY });
-  
+
     fruitCoords.forEach((fruitCoord, index) => {
       if (posX === fruitCoord.x && posY === fruitCoord.y) {
         eatingFruitSound();
@@ -89,14 +89,8 @@ Promise.all([
         fruitEaten = true;
         fruitCoords.splice(index, 1);
         renderRandomFruit();
-				
-        if (!(score % 5)) {
-          OPTIONS.GAME_SPEED -= 10;
-          clearInterval(gameInterval);
-          gameInterval = setInterval(() => {
-            main(gameInterval);
-          }, OPTIONS.GAME_SPEED);
-        }
+
+        !(score % 5) && (OPTIONS.GAME_SPEED -= 10);
       }
     });
 
@@ -114,11 +108,12 @@ Promise.all([
     //Checking collision
     if (checkBorderCollision(posX, posY) || checkTailCollision(posX, posY)) {
       ctx.drawImage(collisionImg, pxStep * posX, pxStep * posY);
-      endGame(gameInterval);
+      endGame();
       return false;
     }
 
     OPTIONS.DIRECTION_CHANGED && (OPTIONS.DIRECTION_CHANGED = false);
+    setTimeout(main, OPTIONS.GAME_SPEED);
   };
 
   //Checking border collision
@@ -196,8 +191,7 @@ Promise.all([
     ctx.drawImage(fruitImg, pxStep * fruitX, pxStep * fruitY);
   };
 
-  const endGame = gameInterval => {
-    clearInterval(gameInterval);
+  const endGame = () => {
     document.removeEventListener('keydown', setDirection);
     setTimeout(() => {
       showModal('Сыграем еще? 😊');
@@ -229,7 +223,7 @@ Promise.all([
 
     OPTIONS.HEAD_IMAGE = snakeHeadDownImg;
     OPTIONS.DIRECTION = 'down';
-    OPTIONS.GAME_SPEED = 300 / +modalSpeedInput.value;
+    OPTIONS.GAME_SPEED = 350 - +modalSpeedInput.value * 40;
     OPTIONS.NUMBER_FRUITS = +modalFruitsInput.value;
     OPTIONS.SNAKE_LENGTH = +modalLengthInput.value;
     coords = [{ x: 6, y: 2 }];
@@ -248,11 +242,10 @@ Promise.all([
     //Arrow-key listener
     document.addEventListener('keydown', setDirection);
 
-    //Game Speed Interval
-    let gameInterval = setInterval(() => {
-      main(gameInterval);
-    }, OPTIONS.GAME_SPEED);
+		//Запуск игры
+    main();
   };
 
+	//Первичный показ модалки
   showModal();
 });
