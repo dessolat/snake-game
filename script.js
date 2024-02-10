@@ -33,7 +33,9 @@ const loadingImages = path => {
   return new Promise(resolve => {
     const img = new Image();
     img.src = path;
-    img.onload = resolve;
+    img.onload = () => {
+      resolve(img);
+    };
   });
 };
 
@@ -47,13 +49,13 @@ Promise.all([
   loadingImages('./images/apple.png'),
   loadingImages('./images/collision.png')
 ]).then(images => {
-  const snakeHeadDownImg = images[0].path[0],
-    snakeHeadLeftImg = images[1].path[0],
-    snakeHeadUpImg = images[2].path[0],
-    snakeHeadRightImg = images[3].path[0],
-    snakeTailImg = images[4].path[0],
-    fruitImg = images[5].path[0],
-    collisionImg = images[6].path[0];
+  const snakeHeadDownImg = images[0],
+    snakeHeadLeftImg = images[1],
+    snakeHeadUpImg = images[2],
+    snakeHeadRightImg = images[3],
+    snakeTailImg = images[4],
+    fruitImg = images[5],
+    collisionImg = images[6];
 
   //Main game function (loop)
   const main = () => {
