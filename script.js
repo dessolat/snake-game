@@ -169,7 +169,7 @@ Promise.all([
   };
 
   const renderFruits = () => {
-    for (fruitCoord of fruitCoords) {
+    for (let fruitCoord of fruitCoords) {
       ctx.drawImage(fruitImg, pxStep * fruitCoord.x, pxStep * fruitCoord.y);
     }
   };
@@ -205,7 +205,8 @@ Promise.all([
 
   const showModal = (modalButtonText = 'Начать игру') => {
     modalButton.textContent = modalButtonText;
-    modal.style.display = 'block';
+    modal.style.display = 'grid';
+    modal.style.placeItems = 'center';
     modalButton.addEventListener('click', init);
   };
 
@@ -267,7 +268,7 @@ Promise.all([
 
   const startGame = () => {
     document.addEventListener('keydown', setDirection);
-    
+
     //Starting main game loop
     main();
   };
