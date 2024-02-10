@@ -6,7 +6,8 @@
 
 body {
   margin: 0;
-  padding-top: 150px;
+	display: grid;
+	place-items: center;
   box-sizing: border-box;
   height: 100vh;
   background: url('./images/body-background.jpg') center no-repeat;
@@ -33,7 +34,6 @@ canvas {
 .modal {
   width: 250px;
   height: 220px;
-  margin: 300px auto;
   border: 3px solid rgb(163, 122, 68);
   background-color: darkseagreen;
   padding: 10px 15px 15px;
